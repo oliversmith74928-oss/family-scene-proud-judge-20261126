@@ -26,8 +26,10 @@ def main() -> None:
         )
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     payload = (text + "\n").encode("utf-8")
+    # Only write to MAKEFUN_OUTPUT_DIR: the repo dir is mounted
+    # read-only in the grader sandbox, so writing entry.txt next to
+    # this script would raise PermissionError and fail the run.
     (OUTPUT_DIR / "entry.txt").write_bytes(payload)
-    Path(__file__).with_name("entry.txt").write_bytes(payload)
     # Verification step: read the file back and confirm it is valid
     # UTF-8, holds exactly the scene, and hashes to a stable digest.
     roundtrip = (OUTPUT_DIR / "entry.txt").read_bytes()
